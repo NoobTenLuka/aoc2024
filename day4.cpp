@@ -26,7 +26,7 @@ int main() {
   ios::sync_with_stdio(0);
   cin.tie(0);
 
-  [[maybe_unused]] auto unused = freopen("inputs/d4t.txt", "r", stdin);
+  [[maybe_unused]] auto unused = freopen("inputs/d4.txt", "r", stdin);
 
   string s;
 
@@ -59,14 +59,40 @@ int main() {
   for(auto x : xset) {
     for (int rowDir = -1; rowDir <= 1; rowDir++) {
       for (int colDir = -1; colDir <= 1; colDir++) {
-	if(colDir == 0 && rowDir == 0) break;
+        if (colDir == 0 && rowDir == 0)
+          continue;
 
-	if(checkDir(x.first + rowDir, x.second + colDir, row, colMax, 'M', rowDir, colDir)) xmas++;
+        if (checkDir(x.first + rowDir, x.second + colDir, row, colMax, 'M', rowDir, colDir))
+        {
+          xmas++;
+        };
       }
     }
   }
 
   cout << "Part 1: " << xmas << endl;
+
+  int crossmas = 0;
+  for(auto a : aset) {
+    int mSum = 0;
+    int sSum = 0;
+    for (int row = -1; row < 2; row++) {
+      if (row == 0) continue;
+      for (int col = -1; col < 2; col++) {
+        if(col == 0) continue;
+        coords p = make_pair(a.first + row, a.second + col);
+        if(mset.count(p)) {
+          mSum++;
+        } else if(sset.count(p)) {
+          sSum++;
+        }
+      }
+    }
+    if(mSum == 2 && sSum == 2 && mset.count(make_pair(a.first-1,a.second-1)) !=
+    mset.count(make_pair(a.first+1,a.second+1))) crossmas++;
+  }
+
+  cout << "Part 2: " << crossmas << endl;
 }
 
 bool checkDir(int row, int col, int rowMax, int colMax, char c, int dirRow, int dirCol) {
